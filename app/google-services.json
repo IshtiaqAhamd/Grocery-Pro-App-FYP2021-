@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "136017342369",
+    "project_id": "online-grocery-app-8e1cf",
+    "storage_bucket": "online-grocery-app-8e1cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136017342369:android:07ae0e8d13616b14fba5e0",
+        "android_client_info": {
+          "package_name": "pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136017342369-onh6qn13fms56pkvnk0shejlok49ljfu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6imSJK_KWrjKgQ8QIZV-lnKozlAdUfZ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136017342369-onh6qn13fms56pkvnk0shejlok49ljfu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
