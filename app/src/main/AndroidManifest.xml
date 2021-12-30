@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineGroceryApp.NoActionBar">
         <activity
+            android:name=".MainUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainSellerActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterUserActivity"
             android:exported="false" />
         <activity

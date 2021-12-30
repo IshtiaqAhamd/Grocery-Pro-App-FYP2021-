@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,14 +22,29 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,9 +69,12 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     private String[] storagePermissions;
     //Picked Image Uri
     private Uri imageUri;
-    private  double latitude, longitude;
 
+    private  double latitude, longitude;
     private LocationManager locationManager;
+
+    private FirebaseAuth firebaseAuth;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +100,15 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         userRegister = findViewById(R.id.sellerRegisterBtn);
         registerSeller = findViewById(R.id.registerSellerTV);
 
-
+        //Initial Permission Array
         locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
         cameraPermissions = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setCanceledOnTouchOutside(false);
 
     }
     // UI Views Performance Actions
@@ -123,7 +147,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
             @Override
             public void onClick(View v) {
                 // Register User
-
+                inputData();
             }
         });
         registerSeller.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +158,194 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
             }
         });
     }
+
+    private String FullName, PhoneNumber, CountryName, StateName, CityName, CompleteAddress, EmailAddress, Password, ConfirmPassword;
+
+    private void inputData() {
+        FullName = userName.getText().toString().trim();
+        PhoneNumber = userPhone.getText().toString().trim();
+        CountryName = userCountry.getText().toString().trim();
+        StateName = userState.getText().toString().trim();
+        CityName = userCity.getText().toString().trim();
+        CompleteAddress = userAddress.getText().toString().trim();
+        EmailAddress = userEmail.getText().toString().trim();
+        Password = userPassword.getText().toString().trim();
+        ConfirmPassword = userConfirmPassword.getText().toString().trim();
+
+        // Validations
+        if (TextUtils.isEmpty(FullName))
+        {
+            Toast.makeText(this, "Enter Full Name ...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(PhoneNumber))
+        {
+            Toast.makeText(this, "Enter Phone Number ...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (latitude == 0.0 || longitude == 0.0)
+        {
+            Toast.makeText(this, "Please click GPS button to Detect Current Location ...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(EmailAddress).matches())
+        {
+            Toast.makeText(this, "Please Enter Valid Email ...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Password.length()<8)
+        {
+            Toast.makeText(this, "Password Must be atleast 8 characters long ...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Password.equals(ConfirmPassword))
+        {
+            Toast.makeText(this, "Password doesn't Match ...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        createAccount();
+    }
+
+    private void createAccount() {
+        progressDialog.setMessage("Creating Account...");
+        progressDialog.show();
+
+        firebaseAuth.createUserWithEmailAndPassword(EmailAddress, Password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        //Account Created
+                        saverFirebaseData();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Failed creating Account
+                        progressDialog.dismiss();
+                        Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void saverFirebaseData() {
+        progressDialog.setTitle("Saving Account Info ...");
+        String timeStamp = ""+System.currentTimeMillis();
+
+        if(imageUri==null)
+        {
+            //Save Info without Image
+
+            //Setup Data to Save
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("uid", "" +firebaseAuth.getUid());
+            hashMap.put("Full Name", "" + FullName);
+            hashMap.put("Phone Number", "" + PhoneNumber);
+            hashMap.put("Country Name", "" + CountryName);
+            hashMap.put("State Name", "" + StateName);
+            hashMap.put("City Name", "" + CityName);
+            hashMap.put("Latitude", "" + latitude);
+            hashMap.put("Longitude", "" + longitude);
+            hashMap.put("Email Address", "" + EmailAddress);
+            hashMap.put("Password", "" + Password);
+            hashMap.put("Confirm Password", "" + ConfirmPassword);
+            hashMap.put("Account Type", "" + "User");
+            hashMap.put("Online", "" + "true");
+            hashMap.put("Profile Image", "" + "");
+            hashMap.put("Time Stamp", "" + timeStamp);
+
+            //Save db
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid()).setValue(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            //db updated
+                            progressDialog.dismiss();
+                            startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //failed updating db
+                            progressDialog.dismiss();
+                            startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
+                            finish();
+                        }
+                    });
+        }
+        else
+        {
+            //Save Info with Image
+
+            //name and path of image
+            String filePathName = "profile_images/" + "" +firebaseAuth.getUid();
+            // Uploading Image
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathName);
+            storageReference.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //get url of uploaded image
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!uriTask.isSuccessful());
+                            Uri downloadImageUri = uriTask.getResult();
+                            if (uriTask.isSuccessful())
+                            {
+                                //Setup Data to Save
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("uid", "" +firebaseAuth.getUid());
+                                hashMap.put("Full Name", "" + FullName);
+                                hashMap.put("Phone Number", "" + PhoneNumber);
+                                hashMap.put("Country Name", "" + CountryName);
+                                hashMap.put("State Name", "" + StateName);
+                                hashMap.put("City Name", "" + CityName);
+                                hashMap.put("Latitude", "" + latitude);
+                                hashMap.put("Longitude", "" + longitude);
+                                hashMap.put("Email Address", "" + EmailAddress);
+                                hashMap.put("Password", "" + Password);
+                                hashMap.put("Confirm Password", "" + ConfirmPassword);
+                                hashMap.put("Account Type", "" + "User");
+                                hashMap.put("Online", "" + "true");
+                                hashMap.put("Profile Image", "" + "" + downloadImageUri); // URL of uploaded image
+                                hashMap.put("Time Stamp", "" + timeStamp);
+
+                                //Save db
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                reference.child(firebaseAuth.getUid()).setValue(hashMap)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                //db updated
+                                                progressDialog.dismiss();
+                                                startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
+                                                finish();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                //failed updating db
+                                                progressDialog.dismiss();
+                                                startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
+                                                finish();
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
     private void showImagePickDialog() {
         //Options To Display  in Dialog
         String[] options = {"Camera","Gallery"};
