@@ -552,7 +552,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==RESULT_OK)
+        if(resultCode==RESULT_OK)
         {
             if (requestCode == IMAGE_PICK_GALLERY_CODE)
             {

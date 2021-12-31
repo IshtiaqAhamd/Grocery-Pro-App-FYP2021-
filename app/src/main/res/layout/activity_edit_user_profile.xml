@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    tools:context=".RegisterUserActivity">
-
+    tools:context=".EditUserProfileActivity">
     <!--Toolbar-->
     <RelativeLayout
+        android:id="@+id/toolBarRL"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:padding="10dp"
@@ -26,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="@string/register_user"
+            android:text="Edit User Profile"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:textStyle="bold">
@@ -44,30 +43,20 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/iconTv"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_circle01"
-        android:padding="5dp"
-        android:src="@drawable/ic_key_white">
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/sellerProfileIv"
+        android:id="@+id/userProfileIv"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_below="@id/iconTv"
+        android:layout_below="@id/toolBarRL"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_person_gray"></ImageView>
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_person_gray">
+    </ImageView>
 
     <EditText
         android:id="@+id/userNameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sellerProfileIv"
+        android:layout_below="@id/userProfileIv"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -77,6 +66,7 @@
         android:drawablePadding="5dp"
         android:hint="Full Name"
         android:inputType="textPersonName|textCapWords">
+
     </EditText>
 
     <EditText
@@ -103,7 +93,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/sellerCountryET"
+            android:id="@+id/userCountryET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -119,7 +109,7 @@
         </EditText>
 
         <EditText
-            android:id="@+id/sellerStateET"
+            android:id="@+id/userStateET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -135,7 +125,7 @@
         </EditText>
 
         <EditText
-            android:id="@+id/sellerCityET"
+            android:id="@+id/userCityET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -152,7 +142,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/sellerAddressET"
+        android:id="@+id/userAddressET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/address_LL"
@@ -167,72 +157,13 @@
         android:inputType="textPostalAddress|textMultiLine">
     </EditText>
 
-    <EditText
-        android:id="@+id/sellerEmailET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sellerAddressET"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/shape_rect02"
-        android:drawableStart="@drawable/ic_mail_gray"
-        android:drawablePadding="5dp"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress">
-    </EditText>
-
-    <EditText
-        android:id="@+id/sellerPasswordET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sellerEmailET"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/shape_rect02"
-        android:drawableStart="@drawable/ic_lock_gray"
-        android:drawablePadding="5dp"
-        android:hint="@string/password"
-        android:inputType="textPassword">
-    </EditText>
-
-    <EditText
-        android:id="@+id/sellerConfPassET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sellerPasswordET"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/shape_rect02"
-        android:drawableStart="@drawable/ic_lock_gray"
-        android:drawablePadding="5dp"
-        android:hint="Confirm Password"
-        android:inputType="textPassword">
-    </EditText>
-
     <Button
-        android:id="@+id/sellerRegisterBtn"
+        android:id="@+id/userUpdateBtn"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sellerConfPassET"
+        android:layout_below="@id/userAddressET"
         android:layout_centerHorizontal="true"
         android:minWidth="120dp"
-        android:text="Register"></Button>
-
-    <TextView
-        android:id="@+id/registerSellerTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/sellerRegisterBtn"
-        android:layout_marginTop="20dp"
-        android:text="Are you seller? Register as Seller">
-    </TextView>
-
+        android:text="Update"></Button>
 </RelativeLayout>

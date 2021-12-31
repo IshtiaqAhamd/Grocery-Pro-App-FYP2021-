@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineGroceryApp.NoActionBar">
         <activity
+            android:name=".EditSellerProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditUserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainUserActivity"
             android:exported="false" />
         <activity

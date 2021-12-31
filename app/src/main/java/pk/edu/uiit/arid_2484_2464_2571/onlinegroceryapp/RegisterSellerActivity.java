@@ -415,6 +415,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
 
     private void detectLocation() {
         Toast.makeText(RegisterSellerActivity.this, "Please Wait....", Toast.LENGTH_LONG).show();
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0, 0, this);
     }
@@ -559,7 +560,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==RESULT_OK)
+        if(resultCode==RESULT_OK)
         {
             if (requestCode == IMAGE_PICK_GALLERY_CODE)
             {
@@ -573,6 +574,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
                 //Set to ImageView
                 sellerProfile.setImageURI(imageUri);
             }
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
