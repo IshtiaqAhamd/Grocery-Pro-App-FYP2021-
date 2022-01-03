@@ -30,8 +30,21 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -110,6 +123,76 @@ public class EditSellerProfileActivity extends AppCompatActivity implements Loca
 
         //
         firebaseAuth = FirebaseAuth.getInstance();
+        checkUser();
+    }
+
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user==null)
+        {
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+        }
+        else
+        {
+            loadMyInfo();
+        }
+    }
+    private void loadMyInfo() {
+        //Load user information, and Set to the Views
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.orderByChild("uid").equalTo(firebaseAuth.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds: snapshot.getChildren()){
+                            String UID = ""+ds.child("uid").getValue();
+                            String SELLER_NAME = ""+ds.child("Full Name").getValue();
+                            String SHOP_NAME = ""+ds.child("Shop Name").getValue();
+                            String PHONE_NUMBER = ""+ds.child("Phone Number").getValue();
+                            String DELIVERY_FEE = ""+ds.child("Deliver Fee").getValue();
+                            String COUNTRY_NAME = ""+ds.child("Country Name").getValue();
+                            String STATE_NAME = ""+ds.child("State Name").getValue();
+                            String CITY_NAME = ""+ds.child("City Name").getValue();
+                            latitude = Double.parseDouble(""+ds.child("Latitude").getValue());
+                            longitude = Double.parseDouble(""+ds.child("Longitude").getValue());
+                            String ADDRESS = ""+ds.child("Address").getValue();
+                            String EMAIL_ADDRESS = ""+ds.child("Email Address").getValue();
+                            String PASSWORD = ""+ds.child("Password").getValue();
+                            String CONFIRM_PASSWORD = ""+ds.child("Confirm Password").getValue();
+                            String ACCOUNT_TYPE = ""+ds.child("Account Type").getValue();
+                            String ONLINE = ""+ds.child("Online").getValue();
+                            String SHOP_OPEN = ""+ds.child("Shop Open").getValue();
+                            String PROFILE_IMAGE = ""+ds.child("Profile Image").getValue();
+                            String TIME_STAMP = ""+ds.child("Time Stamp").getValue();
+
+                            sellerName.setText(SELLER_NAME);
+                            sellerShop.setText(SHOP_NAME);
+                            sellerPhone.setText(PHONE_NUMBER);
+                            deliveryFee.setText(DELIVERY_FEE);
+                            sellerCountry.setText(COUNTRY_NAME);
+                            sellerState.setText(STATE_NAME);
+                            sellerCity.setText(CITY_NAME);
+                            sellerAddress.setText(ADDRESS);
+
+                            if (SHOP_OPEN.equals("true")){
+                                shopOpenSwitch.setChecked(true);
+                            }
+                            else {
+                                shopOpenSwitch.setChecked(false);
+                            }
+                            try {
+
+                            }catch (Exception exp){
+                                sellerProfile.setImageResource(R.drawable.ic_person_gray);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
     // UI Views Performance Actions
     public void ViewsPerformance() {
@@ -131,7 +214,7 @@ public class EditSellerProfileActivity extends AppCompatActivity implements Loca
             @Override
             public void onClick(View v) {
                 // Detect Current Location
-                if (!checkLocationPermission())
+                if (checkLocationPermission())
                 {
                     // Already Allowed
                     detectLocation();
@@ -147,8 +230,132 @@ public class EditSellerProfileActivity extends AppCompatActivity implements Loca
             @Override
             public void onClick(View v) {
                 //Begin Update Profile
+                inputData();
             }
         });
+    }
+
+    String Seller_Name, Seller_Shop, Seller_Phone, Delivery_Fee, Seller_Country, Seller_State, Seller_City, Seller_Address;
+    Boolean Shop_Open;
+    private void inputData() {
+        Seller_Name = sellerName.getText().toString().trim();
+        Seller_Shop = sellerShop.getText().toString().trim();
+        Seller_Phone= sellerPhone.getText().toString().trim();
+        Delivery_Fee = deliveryFee.getText().toString().trim();
+        Seller_Country = sellerCountry.getText().toString().trim();
+        Seller_State = sellerState.getText().toString().trim();
+        Seller_City = sellerState.getText().toString().trim();
+        Seller_Address = sellerAddress.getText().toString().trim();
+        Shop_Open = shopOpenSwitch.isChecked(); //true or false
+        updateProfile();
+    }
+
+    private void updateProfile() {
+        progressDialog.setMessage("Updating Profile....");
+        progressDialog.show();
+
+        if (imageUri==null){
+            //Update Without Image
+            //Setup Data to Update
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("Full Name", "" + Seller_Name);
+            hashMap.put("Shop Name", "" + Seller_Shop);
+            hashMap.put("Phone Number", "" + Seller_Phone);
+            hashMap.put("Deliver Fee", "" + Delivery_Fee);
+            hashMap.put("Country Name", "" + Seller_Country);
+            hashMap.put("State Name", "" + Seller_State);
+            hashMap.put("City Name", "" + Seller_City);
+            hashMap.put("Latitude", "" + latitude);
+            hashMap.put("Longitude", "" + longitude);
+            hashMap.put("Address", "" + Seller_Address);
+            hashMap.put("Account Type", "" + "Seller");
+            hashMap.put("Shop Open", "" + Shop_Open);
+
+            //Update to DB
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid()).updateChildren(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            //Updated
+                            progressDialog.dismiss();
+                            Toast.makeText(EditSellerProfileActivity.this, "Updated Seller Profile", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //Failed to  Update
+                            progressDialog.dismiss();
+                            Toast.makeText(EditSellerProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+            //Update With Image
+            /*----------UpLoad Image First----------*/
+            String filePathAndName = "profile_images/" + ""+ firebaseAuth.getUid();
+            //Get Storage reference
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
+            storageReference.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //Image Upload, get url of uploaded image
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while(!uriTask.isSuccessful());
+                            Uri downloadImageUri = uriTask.getResult();
+
+                            if(uriTask.isSuccessful())
+                            {
+                                //Image url received, now update DB
+                                //Setup Data to Update
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("Full Name", "" + Seller_Name);
+                                hashMap.put("Shop Name", "" + Seller_Shop);
+                                hashMap.put("Phone Number", "" + Seller_Phone);
+                                hashMap.put("Deliver Fee", "" + Delivery_Fee);
+                                hashMap.put("Country Name", "" + Seller_Country);
+                                hashMap.put("State Name", "" + Seller_State);
+                                hashMap.put("City Name", "" + Seller_City);
+                                hashMap.put("Latitude", "" + latitude);
+                                hashMap.put("Longitude", "" + longitude);
+                                hashMap.put("Address", "" + Seller_Address);
+                                hashMap.put("Account Type", "" + "Seller");
+                                hashMap.put("Shop Open", "" + Shop_Open);
+                                hashMap.put("Profile Image", "" + downloadImageUri);
+
+                                //Update to DB
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                reference.child(firebaseAuth.getUid()).updateChildren(hashMap)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                //Updated
+                                                progressDialog.dismiss();
+                                                Toast.makeText(EditSellerProfileActivity.this, "Updated Seller Profile", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                //Failed to  Update
+                                                progressDialog.dismiss();
+                                                Toast.makeText(EditSellerProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //Failed to update
+                            progressDialog.dismiss();
+                            Toast.makeText(EditSellerProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void showImagePickDialog() {

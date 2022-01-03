@@ -29,8 +29,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -105,7 +118,64 @@ public class EditUserProfileActivity extends AppCompatActivity implements Locati
 
         //
         firebaseAuth = FirebaseAuth.getInstance();
+        checkUser();
 
+    }
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user==null)
+        {
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+        }
+        else
+        {
+            loadMyInfo();
+        }
+    }
+    private void loadMyInfo() {
+        //Load user information, and Set to the Views
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.orderByChild("uid").equalTo(firebaseAuth.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds: snapshot.getChildren()){
+                            String UID = ""+ds.child("uid").getValue();
+                            String SELLER_NAME = ""+ds.child("Full Name").getValue();
+                            String PHONE_NUMBER = ""+ds.child("Phone Number").getValue();
+                            String COUNTRY_NAME = ""+ds.child("Country Name").getValue();
+                            String STATE_NAME = ""+ds.child("State Name").getValue();
+                            String CITY_NAME = ""+ds.child("City Name").getValue();
+                            latitude = Double.parseDouble(""+ds.child("Latitude").getValue());
+                            longitude = Double.parseDouble(""+ds.child("Longitude").getValue());
+                            String ADDRESS = ""+ds.child("Address").getValue();
+                            String EMAIL_ADDRESS = ""+ds.child("Email Address").getValue();
+                            String PASSWORD = ""+ds.child("Password").getValue();
+                            String CONFIRM_PASSWORD = ""+ds.child("Confirm Password").getValue();
+                            String ACCOUNT_TYPE = ""+ds.child("Account Type").getValue();
+                            String ONLINE = ""+ds.child("Online").getValue();
+                            String PROFILE_IMAGE = ""+ds.child("Profile Image").getValue();
+                            String TIME_STAMP = ""+ds.child("Time Stamp").getValue();
+
+                            userName.setText(SELLER_NAME);
+                            userPhone.setText(PHONE_NUMBER);
+                            userCountry.setText(COUNTRY_NAME);
+                            userState.setText(STATE_NAME);
+                            userCity.setText(CITY_NAME);
+                            userAddress.setText(ADDRESS);
+                            try {
+
+                            }catch (Exception exp){
+                                userProfile.setImageResource(R.drawable.ic_person_gray);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
     // UI Views Performance Actions
     public void ViewsPerformance() {
@@ -127,7 +197,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Locati
             @Override
             public void onClick(View v) {
                 // Detect Current Location
-                if (!checkLocationPermission())
+                if (checkLocationPermission())
                 {
                     // Already Allowed
                     detectLocation();
@@ -143,9 +213,122 @@ public class EditUserProfileActivity extends AppCompatActivity implements Locati
             @Override
             public void onClick(View v) {
                 //Begin Update Profile
+                inputData();
             }
         });
     }
+
+    String User_Name, User_Phone, User_Country, User_State, User_City, User_Address;
+    private void inputData() {
+        User_Name = userName.getText().toString().trim();
+        User_Phone= userPhone.getText().toString().trim();
+        User_Country = userCountry.getText().toString().trim();
+        User_State = userState.getText().toString().trim();
+        User_City = userState.getText().toString().trim();
+        User_Address = userAddress.getText().toString().trim();
+        updateProfile();
+    }
+
+    private void updateProfile() {
+        progressDialog.setMessage("Updating Profile....");
+        progressDialog.show();
+
+        if (imageUri==null){
+            //Update Without Image
+            //Setup Data to Update
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("Full Name", "" + User_Name);
+            hashMap.put("Phone Number", "" + User_Phone);
+            hashMap.put("Country Name", "" + User_Country);
+            hashMap.put("State Name", "" + User_State);
+            hashMap.put("City Name", "" + User_City);
+            hashMap.put("Latitude", "" + latitude);
+            hashMap.put("Longitude", "" + longitude);
+            hashMap.put("Address", "" + User_Address);
+            hashMap.put("Account Type", "" + "User");
+            //Update to DB
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid()).updateChildren(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            //Updated
+                            progressDialog.dismiss();
+                            Toast.makeText(EditUserProfileActivity.this, "Updated Seller Profile", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //Failed to  Update
+                            progressDialog.dismiss();
+                            Toast.makeText(EditUserProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+            //Update With Image
+            /*----------UpLoad Image First----------*/
+            String filePathAndName = "profile_images/" + ""+ firebaseAuth.getUid();
+            //Get Storage reference
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
+            storageReference.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //Image Upload, get url of uploaded image
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while(!uriTask.isSuccessful());
+                            Uri downloadImageUri = uriTask.getResult();
+
+                            if(uriTask.isSuccessful())
+                            {
+                                //Image url received, now update DB
+                                //Setup Data to Update
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("Full Name", "" + User_Name);
+                                hashMap.put("Phone Number", "" + User_Phone);
+                                hashMap.put("Country Name", "" + User_Country);
+                                hashMap.put("State Name", "" + User_State);
+                                hashMap.put("City Name", "" + User_City);
+                                hashMap.put("Latitude", "" + latitude);
+                                hashMap.put("Longitude", "" + longitude);
+                                hashMap.put("Address", "" + User_Address);
+                                hashMap.put("Account Type", "" + "User");
+                                hashMap.put("Profile Image", "" + downloadImageUri);
+                                //Update to DB
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                reference.child(firebaseAuth.getUid()).updateChildren(hashMap)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                //Updated
+                                                progressDialog.dismiss();
+                                                Toast.makeText(EditUserProfileActivity.this, "Updated Seller Profile", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                //Failed to  Update
+                                                progressDialog.dismiss();
+                                                Toast.makeText(EditUserProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //Failed to update
+                            progressDialog.dismiss();
+                            Toast.makeText(EditUserProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
     private void showImagePickDialog() {
         //Options To Display In Dialog
         String[] Options = {"Camera", "Gallery"};

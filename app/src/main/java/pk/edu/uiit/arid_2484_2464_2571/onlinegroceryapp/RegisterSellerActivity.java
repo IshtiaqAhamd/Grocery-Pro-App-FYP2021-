@@ -149,7 +149,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
     }
 
     private String FullName, ShopName, PhoneNumber, DeliveryFees, CountryName, StateName, CityName, CompleteAddress, EmailAddress, Password, ConfirmPassword;
-    
     private void inputData() {
         FullName = sellerName.getText().toString().trim();
         ShopName = sellerShop.getText().toString().trim();
@@ -249,6 +248,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             hashMap.put("City Name", "" + CityName);
             hashMap.put("Latitude", "" + latitude);
             hashMap.put("Longitude", "" + longitude);
+            hashMap.put("Address", "" + CompleteAddress);
             hashMap.put("Email Address", "" + EmailAddress);
             hashMap.put("Password", "" + Password);
             hashMap.put("Confirm Password", "" + ConfirmPassword);
@@ -310,6 +310,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
                                 hashMap.put("City Name", "" + CityName);
                                 hashMap.put("Latitude", "" + latitude);
                                 hashMap.put("Longitude", "" + longitude);
+                                hashMap.put("Address", "" + CompleteAddress);
                                 hashMap.put("Email Address", "" + EmailAddress);
                                 hashMap.put("Password", "" + Password);
                                 hashMap.put("Confirm Password", "" + ConfirmPassword);
