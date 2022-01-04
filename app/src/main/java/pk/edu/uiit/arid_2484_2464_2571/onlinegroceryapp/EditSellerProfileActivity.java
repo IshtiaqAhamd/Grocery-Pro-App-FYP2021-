@@ -236,7 +236,7 @@ public class EditSellerProfileActivity extends AppCompatActivity implements Loca
     }
 
     String Seller_Name, Seller_Shop, Seller_Phone, Delivery_Fee, Seller_Country, Seller_State, Seller_City, Seller_Address;
-    Boolean Shop_Open;
+    boolean Shop_Open;
     private void inputData() {
         Seller_Name = sellerName.getText().toString().trim();
         Seller_Shop = sellerShop.getText().toString().trim();
@@ -444,6 +444,7 @@ public class EditSellerProfileActivity extends AppCompatActivity implements Loca
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
+
     private void detectLocation() {
         Toast.makeText(this, "Please Wait.....", Toast.LENGTH_SHORT).show();
 
