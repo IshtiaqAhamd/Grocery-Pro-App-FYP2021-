@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddProductActivity">
+    tools:context=".EditProductActivity">
     <!--Toolbar-->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,15 +19,15 @@
             android:src="@drawable/ic_back_white"
             android:background="@null">
         </ImageButton>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Edit Product"
-            android:textColor="@color/colorWhite"
+            android:text="Add Product"
             android:textSize="20sp"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite">
+        </TextView>
     </RelativeLayout>
 
     <!--Form to input data-->
@@ -152,10 +152,10 @@
             android:padding="10dp">
         </EditText>
         <Button
-            android:id="@+id/addProductBtn"
+            android:id="@+id/updateProductBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Product"
+            android:text="Update Product"
             android:layout_below="@id/discountNoteET"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"

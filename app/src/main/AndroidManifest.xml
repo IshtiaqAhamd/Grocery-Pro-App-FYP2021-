@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineGroceryApp.NoActionBar">
         <activity
-            android:name=".AddProductActivity"
+            android:name=".EditProductActivity"
             android:exported="false" />
         <activity
             android:name=".EditSellerProfileActivity"
@@ -25,10 +25,13 @@
             android:name=".EditUserProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".MainSellerActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainUserActivity"
             android:exported="false" />
         <activity
-            android:name=".MainSellerActivity"
+            android:name=".AddProductActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterUserActivity"

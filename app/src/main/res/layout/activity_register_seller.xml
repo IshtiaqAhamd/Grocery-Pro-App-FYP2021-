@@ -11,16 +11,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:padding="10dp"
-        android:background="@drawable/shape_rect01">
+        android:background="@drawable/shape_rect01"
+        android:padding="10dp">
 
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@null"
-            android:src="@drawable/ic_back_white">
-        </ImageButton>
+            android:src="@drawable/ic_back_white"></ImageButton>
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,10 +34,9 @@
             android:id="@+id/gpsBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@null"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_gps_white">
-        </ImageButton>
+            android:background="@null"
+            android:src="@drawable/ic_gps_white"></ImageButton>
     </RelativeLayout>
 
     <ImageView

@@ -80,8 +80,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         ViewsPerformance();
     }
     //UI Views Initialization
-    public void ViewsInitialization()
-    {
+    public void ViewsInitialization() {
         backButton = findViewById(R.id.backBtn);
         gpsButton = findViewById(R.id.gpsBtn);
         sellerProfile = findViewById(R.id.sellerProfileIv);
@@ -108,8 +107,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         progressDialog.setCanceledOnTouchOutside(false);
     }
     // UI Views Performance Actions
-    public void ViewsPerformance()
-    {
+    public void ViewsPerformance() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +145,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             }
         });
     }
-
     private String FullName, ShopName, PhoneNumber, DeliveryFees, CountryName, StateName, CityName, CompleteAddress, EmailAddress, Password, ConfirmPassword;
     private void inputData() {
         FullName = sellerName.getText().toString().trim();
@@ -205,7 +202,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         }
         createAccount();
     }
-
     private void createAccount() {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
@@ -227,7 +223,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             }
         });
     }
-
     private void saverFirebaseData() {
         progressDialog.setTitle("Saving Account Info ...");
         String timeStamp = ""+System.currentTimeMillis();
@@ -393,16 +388,12 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             }
         }).show();
     }
-
-    private void pickFromGallery()
-    {
+    private void pickFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
     }
-
-    private void pickFromCamera()
-    {
+    private void pickFromCamera() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_Image Title");
         contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp_Image Description");
@@ -420,7 +411,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0, 0, this);
     }
-
     private void findAddress() {
         // Find Address, Country, State and City
         Geocoder geocoder;
@@ -443,66 +433,47 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             Toast.makeText(RegisterSellerActivity.this, ""+exp.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
-    private boolean checkLocationPermission()
-    {
+    private boolean checkLocationPermission() {
         boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==(PackageManager.PERMISSION_GRANTED);
         return result;
     }
-    private void requestLocationPermission()
-    {
+    private void requestLocationPermission() {
         ActivityCompat.requestPermissions(this,locationPermissions, LOCATION_REQUEST_CODE);
     }
-
-    private boolean checkStoragePermission()
-    {
+    private boolean checkStoragePermission() {
         boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
         return result;
     }
-
-    private void requestStoragePermission()
-    {
+    private void requestStoragePermission() {
         ActivityCompat.requestPermissions(this, storagePermissions, STORAGE_REQUEST_CODE);
     }
-
-    private boolean checkCameraPermission()
-    {
+    private boolean checkCameraPermission() {
         boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)==(PackageManager.PERMISSION_GRANTED);
         boolean result2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
 
         return result1 && result2;
     }
-
-    private void requestCameraPermission()
-    {
+    private void requestCameraPermission() {
         ActivityCompat.requestPermissions(this, cameraPermissions, CAMERA_REQUEST_CODE);
     }
-
     @Override
     public void onLocationChanged(@NonNull Location location) {
         // Location Detected
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-
         findAddress();
     }
-
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
-
     @Override
     public void onProviderEnabled(@NonNull String provider) {
-        //
     }
-
     @Override
     public void onProviderDisabled(@NonNull String provider) {
         // GPS/Location Disabled
         Toast.makeText(RegisterSellerActivity.this, "Please Turn On Location...", Toast.LENGTH_SHORT).show();
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
@@ -558,7 +529,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode==RESULT_OK)
