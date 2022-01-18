@@ -1,4 +1,4 @@
-package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp;
+package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.models;
 
 public class ModelProduct {
     String Product_ID, Product_Title, Product_Description, Product_Category, Product_Quantity,

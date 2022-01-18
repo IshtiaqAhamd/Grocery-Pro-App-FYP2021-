@@ -1,4 +1,4 @@
-package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp;
+package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.R;
+
 public class RegisterSellerActivity extends AppCompatActivity implements LocationListener {
     //Declare Forgot Password Activity UI Views
     EditText sellerName, sellerShop, sellerPhone, deliveryFee, sellerCountry, sellerState, sellerCity, sellerAddress, sellerEmail, sellerPassword, sellerConfirmPassword;
@@ -83,7 +85,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
     public void ViewsInitialization() {
         backButton = findViewById(R.id.backBtn);
         gpsButton = findViewById(R.id.gpsBtn);
-        sellerProfile = findViewById(R.id.sellerProfileIv);
+        sellerProfile = findViewById(R.id.userProfileIV);
         sellerName = findViewById(R.id.sellerNameET);
         sellerShop = findViewById(R.id.shopNameET);
         sellerPhone = findViewById(R.id.sellerPhoneET);
@@ -234,24 +236,24 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             //Setup Data to Save
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("uid", "" +firebaseAuth.getUid());
-            hashMap.put("Full Name", "" + FullName);
-            hashMap.put("Shop Name", "" + ShopName);
-            hashMap.put("Phone Number", "" + PhoneNumber);
-            hashMap.put("Deliver Fee", "" + DeliveryFees);
-            hashMap.put("Country Name", "" + CountryName);
-            hashMap.put("State Name", "" + StateName);
-            hashMap.put("City Name", "" + CityName);
+            hashMap.put("Full_Name", "" + FullName);
+            hashMap.put("Shop_Name", "" + ShopName);
+            hashMap.put("Phone_Number", "" + PhoneNumber);
+            hashMap.put("Deliver_Fee", "" + DeliveryFees);
+            hashMap.put("Country_Name", "" + CountryName);
+            hashMap.put("State_Name", "" + StateName);
+            hashMap.put("City_Name", "" + CityName);
             hashMap.put("Latitude", "" + latitude);
             hashMap.put("Longitude", "" + longitude);
             hashMap.put("Address", "" + CompleteAddress);
-            hashMap.put("Email Address", "" + EmailAddress);
+            hashMap.put("Email_Address", "" + EmailAddress);
             hashMap.put("Password", "" + Password);
-            hashMap.put("Confirm Password", "" + ConfirmPassword);
-            hashMap.put("Account Type", "" + "Seller");
+            hashMap.put("Confirm_Password", "" + ConfirmPassword);
+            hashMap.put("Account_Type", "" + "Seller");
             hashMap.put("Online", "" + "true");
-            hashMap.put("Shop Open", "" + "true");
-            hashMap.put("Profile Image", "" + "");
-            hashMap.put("Time Stamp", "" + timeStamp);
+            hashMap.put("Shop_Open", "" + "true");
+            hashMap.put("Profile_Image", "" + "");
+            hashMap.put("Time_Stamp", "" + timeStamp);
 
             //Save db
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");

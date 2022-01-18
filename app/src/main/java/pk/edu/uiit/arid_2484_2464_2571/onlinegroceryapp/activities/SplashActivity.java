@@ -1,7 +1,4 @@
-package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +6,9 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.window.SplashScreen;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.R;
 
 public class SplashActivity extends AppCompatActivity {
     ImageView splashImage;
@@ -64,24 +65,22 @@ public class SplashActivity extends AppCompatActivity {
         //if user is seller, start seller main screen
         //if user is buyer, start user main screen
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.orderByChild("uid").equalTo(firebaseAuth.getUid())
+        reference.child(firebaseAuth.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds: snapshot.getChildren()){
-                            String accountType = ""+ds.child("Account Type").getValue();
-                            if (accountType.equals("Seller"))
-                            {
-                                //user is seller
-                                startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
-                                finish();
-                            }
-                            else
-                            {
-                                //user is buyer
-                                startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
-                                finish();
-                            }
+                        String accountType = ""+snapshot.child("Account Type").getValue();
+                        if (accountType.equals("Seller"))
+                        {
+                            //user is seller
+                            startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
+                            finish();
+                        }
+                        else
+                        {
+                            //user is buyer
+                            startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
+                            finish();
                         }
                     }
 

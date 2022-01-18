@@ -10,7 +10,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/productIconIV"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -18,8 +19,7 @@
             android:layout_marginEnd="5dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_add_shopping_primary">
-        </ImageView>
+            android:src="@drawable/ic_add_shopping_primary"></de.hdodenhof.circleimageview.CircleImageView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,19 +72,17 @@
             </TextView>
             </RelativeLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/nextIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_next_gray"
-            android:layout_marginEnd="5dp">
-        </ImageView>
-
-
+            android:src="@drawable/ic_next_gray"></ImageView>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

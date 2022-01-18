@@ -1,4 +1,4 @@
-package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp;
+package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -41,6 +41,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.Constants;
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.R;
 
 public class EditProductActivity extends AppCompatActivity {
     //Declare Add Product Activity UI Views

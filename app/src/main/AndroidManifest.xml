@@ -16,37 +16,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineGroceryApp.NoActionBar">
         <activity
-            android:name=".EditProductActivity"
+            android:name=".activities.EditProductActivity"
             android:exported="false" />
         <activity
-            android:name=".EditSellerProfileActivity"
+            android:name=".activities.EditSellerProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".EditUserProfileActivity"
+            android:name=".activities.EditUserProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".MainSellerActivity"
+            android:name=".activities.MainSellerActivity"
             android:exported="false" />
         <activity
-            android:name=".MainUserActivity"
+            android:name=".activities.MainUserActivity"
             android:exported="false" />
         <activity
-            android:name=".AddProductActivity"
+            android:name=".activities.AddProductActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterUserActivity"
+            android:name=".activities.RegisterUserActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterSellerActivity"
+            android:name=".activities.RegisterSellerActivity"
             android:exported="false" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".activities.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

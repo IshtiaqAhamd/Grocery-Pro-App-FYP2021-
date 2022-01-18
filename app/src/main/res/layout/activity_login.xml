@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context=".LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <!--Toolbar-->
     <RelativeLayout
@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="@string/login"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/colorWhite">
+            android:textColor="@color/colorWhite"
+            android:textSize="32sp"
+            android:textStyle="bold">
         </TextView>
     </RelativeLayout>
     <ImageView
@@ -35,7 +35,6 @@
         android:padding="5dp"
         android:layout_centerHorizontal="true">
     </ImageView>
-
     <EditText
         android:id="@+id/sellerEmailET"
         android:layout_width="match_parent"
@@ -49,28 +48,40 @@
         android:drawableStart="@drawable/ic_mail_gray"
         android:drawablePadding="5dp"
         android:hint="@string/email"
-        android:inputType="textEmailAddress">
+        android:inputType="textEmailAddress"
+        android:textSize="32sp">
     </EditText>
+
     <EditText
         android:id="@+id/sellerPasswordET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sellerEmailET"
-        android:hint="@string/password"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="32sp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/shape_rect02"
         android:drawableStart="@drawable/ic_lock_gray"
         android:drawablePadding="5dp"
-        android:layout_margin="5dp"
-        android:inputType="textPassword"
-        android:background="@drawable/shape_rect02">
+        android:hint="@string/password"
+        android:inputType="textPassword">
     </EditText>
+
     <TextView
         android:id="@+id/forgotTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="@string/forgot_password"
         android:layout_below="@id/sellerPasswordET"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:layout_marginBottom="5dp"
+        android:text="@string/forgot_password">
     </TextView>
 
     <Button
@@ -81,17 +92,20 @@
         android:layout_below="@id/forgotTv"
         android:layout_centerHorizontal="true"
         android:minWidth="120dp"
-        android:text="@string/login">
+        android:text="@string/login"
+        android:textSize="32sp">
+
     </Button>
 
     <TextView
         android:id="@+id/noAccountTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/loginBtn"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/loginBtn"
         android:text="@string/not_have_account_register">
-
     </TextView>
 </RelativeLayout>

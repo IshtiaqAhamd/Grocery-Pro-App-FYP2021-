@@ -14,4 +14,10 @@
     <color name="colorBlack">#000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="colorGreen">#43A047</color>
+    <color name="colorRed">#FF0000</color>
+    <!--Soft UI Colors-->
+    <color name="background">#E1E6EC</color>
+    <color name="highlight">#FFFFFF</color>
+    <color name="shadow_color">#D9DBDE</color>
+    <color name="dark">#31256A</color>
 </resources>

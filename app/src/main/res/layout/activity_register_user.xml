@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context=".RegisterUserActivity">
+    tools:context=".activities.RegisterUserActivity">
 
     <!--Toolbar-->
     <RelativeLayout
@@ -55,19 +55,21 @@
         android:src="@drawable/ic_key_white">
     </ImageView>
 
-    <ImageView
-        android:id="@+id/sellerProfileIv"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userProfileIV"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@id/iconTv"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_person_gray"></ImageView>
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="3dp"
+        android:src="@drawable/ic_person_gray"></de.hdodenhof.circleimageview.CircleImageView>
 
     <EditText
         android:id="@+id/userNameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sellerProfileIv"
+        android:layout_below="@id/userProfileIV"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"

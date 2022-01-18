@@ -1,4 +1,4 @@
-package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp;
+package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +46,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.R;
 
 public class RegisterUserActivity extends AppCompatActivity implements LocationListener {
     //Declare Forgot Password Activity UI Views
@@ -87,7 +88,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     {
         backButton = findViewById(R.id.backBtn);
         gpsButton = findViewById(R.id.gpsBtn);
-        userProfile = findViewById(R.id.sellerProfileIv);
+        userProfile = findViewById(R.id.userProfileIV);
         userName = findViewById(R.id.userNameET);
         userPhone = findViewById(R.id.userPhoneET);
         userCountry = findViewById(R.id.sellerCountryET);

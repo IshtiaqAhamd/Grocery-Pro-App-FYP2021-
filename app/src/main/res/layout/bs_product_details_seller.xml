@@ -48,7 +48,7 @@
         </TextView>
     </RelativeLayout>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/productIconIV"
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -57,8 +57,7 @@
         android:adjustViewBounds="true"
         android:background="@color/colorPrimary"
         android:padding="10dp"
-        android:src="@drawable/ic_add_shopping_white">
-    </ImageView>
+        android:src="@drawable/ic_add_shopping_white"></de.hdodenhof.circleimageview.CircleImageView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

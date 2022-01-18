@@ -4,6 +4,9 @@ import android.widget.Filter;
 
 import java.util.ArrayList;
 
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.adapters.AdapterProductSeller;
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.models.ModelProduct;
+
 public class FilterProduct extends Filter {
 
     private AdapterProductSeller adapter;

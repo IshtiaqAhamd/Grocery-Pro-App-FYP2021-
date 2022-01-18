@@ -1,4 +1,4 @@
-package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp;
+package pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,10 +27,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.FilterProduct;
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.R;
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.activities.EditProductActivity;
+import pk.edu.uiit.arid_2484_2464_2571.onlinegroceryapp.models.ModelProduct;
+
 public class AdapterProductSeller extends RecyclerView.Adapter<AdapterProductSeller.HolderProductSeller> implements Filterable {
     private Context context;
     public ArrayList<ModelProduct> productsList, filterList;
-    private  FilterProduct filter;
+    private FilterProduct filter;
     public AdapterProductSeller(Context context, ArrayList<ModelProduct> productsList) {
         this.context = context;
         this.productsList = productsList;
@@ -172,7 +177,7 @@ public class AdapterProductSeller extends RecyclerView.Adapter<AdapterProductSel
             public void onClick(View v) {
                 bottomSheetDialog.dismiss();
                 // Open Edit Product Activity, Pass id of Product
-                Intent intent = new Intent(context,EditProductActivity.class);
+                Intent intent = new Intent(context, EditProductActivity.class);
                 intent.putExtra("productId",ID);
                 context.startActivity(intent);
             }
